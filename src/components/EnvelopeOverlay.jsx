@@ -214,12 +214,13 @@ export default function EnvelopeOverlay({ onOpen }) {
                       <circle cx="40" cy="40" r="34" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="0.8" />
                     </svg>
                     <span className="relative font-display text-lg text-white/95 sm:text-xl">
-                      {weddingData.sealInitials.split(' ')[0]}
+                      {/* {weddingData.sealInitials.split(' ')[0]} */}
+                      أضغط هنا
                     </span>
                   </div>
-                  <p className="text-xs tracking-[0.2em] text-charcoal/40">
+                  {/* <p className="text-xs tracking-[0.2em] text-charcoal/40">
                     اضغط لفتح الدعوة
-                  </p>
+                  </p> */}
                 </motion.div>
               </div>
             </motion.div>
