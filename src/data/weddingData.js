@@ -62,5 +62,5 @@ export const weddingData = {
     'https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=800&q=80',
   footerMessage: 'نتشرف بحضوركم ومشاركتكم فرحتنا',
   envelopeMessage: 'هذه الدعوة خاصة بك',
-  sealName: 'أحمد محمود',
+  sealInitials: 'A & H',
 };
