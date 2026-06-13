@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+@theme {
+  --color-gold: #c9a961;
+  --color-gold-light: #e8d5a3;
+  --color-rose-gold: #b76e79;
+  --color-rose-gold-light: #e8b4b8;
+  --color-rose-gold-dark: #9a5a64;
+  --color-beige: #f5f0eb;
+  --color-cream: #faf8f5;
+  --color-charcoal: #2c2c2c;
+  --color-charcoal-light: #4a4a4a;
+
+  --font-display: "Playfair Display", serif;
+  --font-script: "Great Vibes", cursive;
+  --font-body: "Cairo", sans-serif;
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-cream);
+  color: var(--color-charcoal);
+  direction: rtl;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-script {
+  font-family: var(--font-script);
+}
+
+.gallery-swiper {
+  overflow: hidden !important;
+}
+
+.gallery-swiper .swiper-pagination-bullet {
+  background: var(--color-gold);
+  opacity: 0.4;
+}
+
+.gallery-swiper .swiper-pagination-bullet-active {
+  opacity: 1;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-beige);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-gold);
+  border-radius: 4px;
+}
+
+input,
+textarea,
+button {
+  font-family: var(--font-body);
+}
