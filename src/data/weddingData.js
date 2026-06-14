@@ -56,8 +56,8 @@ export const weddingData = {
     "https://images.unsplash.com/photo-1519741497674-611481863552?w=1920&q=80",
   heroVideo:
     // 'https://www.pexels.com/download/video/27979648/',
-    // "https://nfrah.com/videos/secret_garden.mp4",
-  'https://nfrah.com/videos/greek_door.mp4',
+    "https://nfrah.com/videos/secret_garden.mp4",
+  // 'https://nfrah.com/videos/greek_door.mp4',
   heroVideoFallback: "https://www.pexels.com/download/video/27979648/",
   storyImage:
     "https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=800&q=80",
