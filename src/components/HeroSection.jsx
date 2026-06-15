@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { weddingData } from '../data/weddingData';
 
-export default function HeroSection() {
+export default function HeroSection({ guestName = '' }) {
   const videoRef = useRef(null);
 
   useEffect(() => {
@@ -108,6 +108,17 @@ export default function HeroSection() {
           transition={{ duration: 0.8, delay: 0.5 }}
           className="mx-auto my-6 h-px w-32 bg-gradient-to-r from-transparent via-gold to-transparent"
         />
+
+        {guestName && (
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="mb-2 font-script text-3xl text-rose-gold sm:text-4xl"
+          >
+            أهلاً {guestName}
+          </motion.p>
+        )}
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}

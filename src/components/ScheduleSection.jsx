@@ -27,8 +27,8 @@ export default function ScheduleSection() {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className="flex items-center gap-6 rounded-2xl border border-beige bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
             >
-              <div className="flex h-16 w-16 shrink-0 flex-col items-center justify-center rounded-xl bg-gold/10">
-                <span className="font-display text-lg text-gold">{item.time}</span>
+              <div className="flex h-20 w-20 shrink-0 flex-col items-center justify-center rounded-xl bg-gold/10">
+                <span className="font-display text-lg text-gold">{item.time} </span>
               </div>
               <div>
                 <h3 className="font-medium text-lg text-charcoal">{item.event}</h3>

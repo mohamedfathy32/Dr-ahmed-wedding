@@ -62,7 +62,10 @@ function BackgroundOrbs() {
   );
 }
 
-export default function EnvelopeOverlay({ onOpen }) {
+export default function EnvelopeOverlay({ onOpen, guestName = '' }) {
+  const envelopeMessage = guestName
+    ? `هذه الدعوة خاصة بـ ${guestName}`
+    : weddingData.envelopeMessage;
   const [isVisible, setIsVisible] = useState(true);
   const [isOpening, setIsOpening] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
@@ -172,7 +175,9 @@ export default function EnvelopeOverlay({ onOpen }) {
                     </p>
                     <div className="mx-auto my-3 h-px w-20 bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
                     <p className="max-w-[260px] text-sm leading-relaxed text-charcoal/55">
-                      يتشرف بدعوتكم لمشاركة فرحته في هذا اليوم المميز
+                      {guestName
+                        ? `يتشرف بدعوتك ${guestName} لمشاركة فرحته في هذا اليوم المميز`
+                        : 'يتشرف بدعوتكم لمشاركة فرحته في هذا اليوم المميز'}
                     </p>
                   </div>
                 </div>
@@ -231,7 +236,7 @@ export default function EnvelopeOverlay({ onOpen }) {
             animate={{ opacity: isOpening ? 0 : [0.5, 0.8, 0.5] }}
             transition={{ duration: 3, repeat: Infinity }}
           >
-            {weddingData.envelopeMessage}
+            {envelopeMessage}
           </motion.p>
         </motion.div>
       )}

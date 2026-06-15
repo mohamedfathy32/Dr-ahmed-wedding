@@ -21,14 +21,18 @@ export const weddingData = {
   },
   location: {
     mapUrl: "https://maps.app.goo.gl/KnPFxiNJA1bGZWrR6?g_st=iw",
+    embedUrl:
+      "https://www.google.com/maps?q=H73Q%2BW3W+Gardenia+Wedding+Hall,+Ismailia,+Ismailia+Governorate&hl=ar&z=17&output=embed",
     label: "عرض الموقع على الخريطة",
   },
   schedule: [
-    { time: "الجمعة ٢٦ يونيو", event: "السهرة - أمام المنزل" },
-    { time: "٧:٣٠ مساءً", event: "استقبال الضيوف - قاعة جاردينا" },
-    { time: "٨:٠٠ مساءً", event: "بداية الحفل" },
-    { time: "٩:٠٠ مساءً", event: "العشاء" },
-    { time: "١٠:٠٠ مساءً", event: "التصوير" },
+    // { time: "الجمعة ٢٦ يونيو", event: "السهرة - أمام المنزل" },
+    { time: "7 مساءً", event: "استقبال الضيوف - قاعة جاردينا" },
+    { time: "8:00 مساءً", event: "بداية الحفل" },
+    { time: "8:30 مساءً", event: "كتب الكتاب" },
+    { time: "9:30 مساءً", event: "الاستراحه" },
+    { time: "10:00 مساءً", event: "استكمال الحفل" },
+    { time: "11:00 مساءً", event: "نهاية الحفل" },
   ],
   gallery: [
     {
@@ -40,15 +44,15 @@ export const weddingData = {
       alt: "صورة العريس",
     },
     {
-      src: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=800&q=80",
+      src: "https://res.cloudinary.com/dsisurv9k/image/upload/v1781545828/WhatsApp_Image_2026-06-15_at_8.39.34_PM_pbrm8k.jpg",
       alt: "لحظات مميزة",
     },
     {
-      src: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=800&q=80",
+      src: "https://res.cloudinary.com/dsisurv9k/image/upload/v1781545827/WhatsApp_Image_2026-06-15_at_8.39.23_PM_v6pl1e.jpg",
       alt: "ذكريات جميلة",
     },
     {
-      src: "https://images.unsplash.com/photo-1520854221256-17451b1c6296?w=800&q=80",
+      src: "https://res.cloudinary.com/dsisurv9k/image/upload/v1781546263/WhatsApp_Image_2026-06-15_at_8.57.05_PM_su4zay.jpg",
       alt: "احتفال الزفاف",
     },
   ],
@@ -56,11 +60,11 @@ export const weddingData = {
     "https://images.unsplash.com/photo-1519741497674-611481863552?w=1920&q=80",
   heroVideo:
     // 'https://www.pexels.com/download/video/27979648/',
-    "https://nfrah.com/videos/secret_garden.mp4",
-  // 'https://nfrah.com/videos/greek_door.mp4',
+    // "https://nfrah.com/videos/secret_garden.mp4",
+  'https://nfrah.com/videos/greek_door.mp4',
   heroVideoFallback: "https://www.pexels.com/download/video/27979648/",
   storyImage:
-    "https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=800&q=80",
+    "https://res.cloudinary.com/dsisurv9k/image/upload/v1781545906/WhatsApp_Image_2026-06-15_at_8.51.17_PM_bktehz.jpg",
   footerMessage: "نتشرف بحضوركم ومشاركتكم فرحتنا",
   envelopeMessage: "هذه الدعوة خاصة بك",
   sealInitials: "A & H",
