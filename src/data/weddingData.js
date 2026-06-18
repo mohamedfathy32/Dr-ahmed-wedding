@@ -36,11 +36,11 @@ export const weddingData = {
   ],
   gallery: [
     {
-      src: "https://images.unsplash.com/photo-1519741497674-611481863552?w=800&q=80",
+      src: "https://res.cloudinary.com/dsisurv9k/image/upload/v1781797311/WhatsApp_Image_2026-06-15_at_8.51.52_PM_1_vxf6k7.jpg",
       alt: "صورة تذكارية",
     },
     {
-      src: "https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=800&q=80",
+      src: "https://res.cloudinary.com/dsisurv9k/image/upload/v1781797312/WhatsApp_Image_2026-06-15_at_8.51.52_PM_wzrgwu.jpg",
       alt: "صورة العريس",
     },
     {
