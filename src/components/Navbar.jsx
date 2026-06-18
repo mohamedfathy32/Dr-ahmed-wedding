@@ -10,6 +10,7 @@ const navLinks = [
   { href: '#details', label: 'التفاصيل' },
   { href: '#schedule', label: 'الجدول' },
   { href: '#gallery', label: 'المعرض' },
+  { href: '#guest-photos', label: 'صور مع العريس' },
   { href: '#wishes', label: 'التهاني' },
 ];
 

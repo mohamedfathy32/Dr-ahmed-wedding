@@ -10,6 +10,7 @@ import DetailsSection from '../components/DetailsSection';
 import LocationSection from '../components/LocationSection';
 import ScheduleSection from '../components/ScheduleSection';
 import GallerySection from '../components/GallerySection';
+import GuestPhotosSection from '../components/GuestPhotosSection';
 import WishesSection from '../components/WishesSection';
 import Footer from '../components/Footer';
 import { fetchInviteBySlug } from '../services/invitesService';
@@ -96,6 +97,7 @@ export default function Home() {
         <LocationSection />
         <ScheduleSection />
         <GallerySection />
+        <GuestPhotosSection defaultCaption={guestName} />
         <WishesSection defaultName={guestName} />
       </main>
       <Footer />

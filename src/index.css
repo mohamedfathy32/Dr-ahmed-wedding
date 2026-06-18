@@ -55,6 +55,28 @@ body {
   opacity: 1;
 }
 
+.guest-photos-swiper .swiper-button-next,
+.guest-photos-swiper .swiper-button-prev {
+  color: var(--color-gold);
+  width: 36px;
+  height: 36px;
+}
+
+.guest-photos-swiper .swiper-button-next::after,
+.guest-photos-swiper .swiper-button-prev::after {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.guest-photos-swiper .swiper-pagination-bullet {
+  background: var(--color-gold);
+  opacity: 0.4;
+}
+
+.guest-photos-swiper .swiper-pagination-bullet-active {
+  opacity: 1;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
 }

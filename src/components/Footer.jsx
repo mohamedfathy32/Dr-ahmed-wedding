@@ -1,5 +1,7 @@
 import { weddingData } from '../data/weddingData';
 
+const DEVELOPER_WHATSAPP = '201094976357';
+
 export default function Footer() {
   const year = new Date().getFullYear();
 
@@ -15,6 +17,17 @@ export default function Footer() {
         </p>
         <p className="mt-6 text-sm text-white/40">
           © {year} جميع الحقوق محفوظة
+        </p>
+        <p className="mt-4 text-sm text-white/50">
+          تم التصميم والتطوير بواسطة{' '}
+          <a
+            href={`https://wa.me/${DEVELOPER_WHATSAPP}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-medium text-gold-light transition-colors hover:text-gold hover:underline"
+          >
+            محمد فتحي
+          </a>
         </p>
       </div>
     </footer>

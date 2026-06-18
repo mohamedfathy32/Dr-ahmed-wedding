@@ -12,9 +12,18 @@ import {
   FaEdit,
   FaPlus,
   FaEnvelope,
+  FaCamera,
+  FaEye,
+  FaEyeSlash,
 } from 'react-icons/fa';
 import { useAuth } from '../contexts/AuthContext';
-import { deleteWish, fetchWishes } from '../services/wishesService';
+import { deleteWish, fetchWishes, updateWish } from '../services/wishesService';
+import {
+  deleteGuestPhoto,
+  fetchGuestPhotos,
+  toggleGuestPhotoVisibility,
+  updateGuestPhotoCaption,
+} from '../services/guestPhotosService';
 import {
   buildInviteUrl,
   createInvite,
@@ -329,6 +338,9 @@ function WishesPanel() {
   const [wishes, setWishes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState(null);
+  const [editingId, setEditingId] = useState(null);
+  const [editForm, setEditForm] = useState({ name: '', message: '' });
+  const [savingId, setSavingId] = useState(null);
 
   const loadWishes = useCallback(async () => {
     setLoading(true);
@@ -346,6 +358,35 @@ function WishesPanel() {
     loadWishes();
   }, [loadWishes]);
 
+  const startEdit = (wish) => {
+    setEditingId(wish.id);
+    setEditForm({ name: wish.name, message: wish.message });
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditForm({ name: '', message: '' });
+  };
+
+  const handleSave = async (wishId) => {
+    setSavingId(wishId);
+    try {
+      await updateWish(wishId, editForm);
+      setWishes((prev) =>
+        prev.map((wish) =>
+          wish.id === wishId
+            ? { ...wish, name: editForm.name.trim(), message: editForm.message.trim() }
+            : wish,
+        ),
+      );
+      cancelEdit();
+    } catch (error) {
+      alert(error.message || 'حدث خطأ أثناء الحفظ');
+    } finally {
+      setSavingId(null);
+    }
+  };
+
   const handleDelete = async (wishId) => {
     if (!window.confirm('هل أنت متأكد من حذف هذه التهنئة؟')) return;
 
@@ -353,6 +394,7 @@ function WishesPanel() {
     try {
       await deleteWish(wishId);
       setWishes((prev) => prev.filter((wish) => wish.id !== wishId));
+      if (editingId === wishId) cancelEdit();
     } catch {
       alert('حدث خطأ أثناء الحذف');
     } finally {
@@ -396,24 +438,299 @@ function WishesPanel() {
               transition={{ delay: index * 0.05 }}
               className="rounded-2xl border border-beige bg-white p-6 shadow-sm"
             >
-              <div className="mb-4 flex items-start justify-between">
-                <div>
-                  <h3 className="font-medium text-charcoal">{wish.name}</h3>
-                  <p className="mt-1 text-xs text-charcoal/50">
-                    {formatDate(wish.createdAt)}
-                  </p>
+              <div className="mb-4 flex items-start justify-between gap-2">
+                <div className="min-w-0 flex-1">
+                  {editingId === wish.id ? (
+                    <div className="space-y-3">
+                      <input
+                        type="text"
+                        value={editForm.name}
+                        onChange={(e) => setEditForm((prev) => ({ ...prev, name: e.target.value }))}
+                        className="w-full rounded-lg border border-beige bg-cream px-3 py-2 text-sm text-charcoal outline-none focus:border-gold"
+                        placeholder="الاسم"
+                      />
+                      <textarea
+                        value={editForm.message}
+                        onChange={(e) => setEditForm((prev) => ({ ...prev, message: e.target.value }))}
+                        rows={3}
+                        className="w-full resize-none rounded-lg border border-beige bg-cream px-3 py-2 text-sm text-charcoal outline-none focus:border-gold"
+                        placeholder="رسالة التهنئة"
+                      />
+                    </div>
+                  ) : (
+                    <>
+                      <h3 className="font-medium text-charcoal">{wish.name}</h3>
+                      <p className="mt-1 text-xs text-charcoal/50">
+                        {formatDate(wish.createdAt)}
+                      </p>
+                    </>
+                  )}
                 </div>
-                <button
-                  type="button"
-                  onClick={() => handleDelete(wish.id)}
-                  disabled={deletingId === wish.id}
-                  className="rounded-lg p-2 text-red-400 transition-colors hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
-                  aria-label="حذف التهنئة"
-                >
-                  <FaTrash />
-                </button>
+                <div className="flex shrink-0 gap-1">
+                  {editingId === wish.id ? (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => handleSave(wish.id)}
+                        disabled={savingId === wish.id}
+                        className="rounded-lg px-3 py-2 text-xs font-medium text-gold transition-colors hover:bg-gold/10 disabled:opacity-50"
+                      >
+                        {savingId === wish.id ? '...' : 'حفظ'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={cancelEdit}
+                        className="rounded-lg px-3 py-2 text-xs text-charcoal/60 transition-colors hover:bg-beige"
+                      >
+                        إلغاء
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => startEdit(wish)}
+                        className="rounded-lg p-2 text-charcoal/50 transition-colors hover:bg-beige hover:text-gold"
+                        aria-label="تعديل التهنئة"
+                      >
+                        <FaEdit />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(wish.id)}
+                        disabled={deletingId === wish.id}
+                        className="rounded-lg p-2 text-red-400 transition-colors hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
+                        aria-label="حذف التهنئة"
+                      >
+                        <FaTrash />
+                      </button>
+                    </>
+                  )}
+                </div>
               </div>
-              <p className="leading-relaxed text-charcoal/80">{wish.message}</p>
+              {editingId !== wish.id && (
+                <p className="leading-relaxed text-charcoal/80">{wish.message}</p>
+              )}
+            </motion.div>
+          ))}
+        </div>
+      )}
+    </>
+  );
+}
+
+function GuestPhotosPanel() {
+  const [photos, setPhotos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState(null);
+  const [togglingId, setTogglingId] = useState(null);
+  const [editingId, setEditingId] = useState(null);
+  const [editCaption, setEditCaption] = useState('');
+  const [savingId, setSavingId] = useState(null);
+
+  const loadPhotos = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await fetchGuestPhotos();
+      setPhotos(data);
+    } catch {
+      setPhotos([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadPhotos();
+  }, [loadPhotos]);
+
+  const handleToggleVisibility = async (photo) => {
+    setTogglingId(photo.id);
+    try {
+      const nextVisible = photo.visible === false;
+      await toggleGuestPhotoVisibility(photo.id, nextVisible);
+      setPhotos((prev) =>
+        prev.map((item) =>
+          item.id === photo.id ? { ...item, visible: nextVisible } : item,
+        ),
+      );
+    } catch {
+      alert('حدث خطأ أثناء تحديث حالة الصورة');
+    } finally {
+      setTogglingId(null);
+    }
+  };
+
+  const startEdit = (photo) => {
+    setEditingId(photo.id);
+    setEditCaption(photo.caption);
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditCaption('');
+  };
+
+  const handleSaveCaption = async (photoId) => {
+    setSavingId(photoId);
+    try {
+      await updateGuestPhotoCaption(photoId, editCaption);
+      setPhotos((prev) =>
+        prev.map((photo) =>
+          photo.id === photoId ? { ...photo, caption: editCaption.trim() } : photo,
+        ),
+      );
+      cancelEdit();
+    } catch (error) {
+      alert(error.message || 'حدث خطأ أثناء الحفظ');
+    } finally {
+      setSavingId(null);
+    }
+  };
+
+  const handleDelete = async (photoId) => {
+    if (!window.confirm('هل أنت متأكد من حذف هذه الصورة؟')) return;
+
+    setDeletingId(photoId);
+    try {
+      await deleteGuestPhoto(photoId);
+      setPhotos((prev) => prev.filter((photo) => photo.id !== photoId));
+      if (editingId === photoId) cancelEdit();
+    } catch {
+      alert('حدث خطأ أثناء الحذف');
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
+  const visibleCount = photos.filter((photo) => photo.visible !== false).length;
+
+  return (
+    <>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="mb-8 rounded-2xl border border-beige bg-white p-6 shadow-sm"
+      >
+        <div className="flex items-center gap-4">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gold/10">
+            <FaCamera className="text-2xl text-gold" />
+          </div>
+          <div>
+            <p className="text-sm text-charcoal/60">إجمالي الصور</p>
+            <p className="font-display text-3xl text-gold">{photos.length}</p>
+            <p className="mt-1 text-xs text-charcoal/50">
+              {visibleCount} ظاهرة · {photos.length - visibleCount} مخفية
+            </p>
+          </div>
+        </div>
+      </motion.div>
+
+      {loading ? (
+        <div className="flex justify-center py-20">
+          <div className="h-10 w-10 animate-spin rounded-full border-2 border-gold border-t-transparent" />
+        </div>
+      ) : photos.length === 0 ? (
+        <div className="rounded-2xl border border-beige bg-white py-20 text-center">
+          <p className="text-charcoal/60">لا توجد صور مرفوعة حتى الآن</p>
+        </div>
+      ) : (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {photos.map((photo, index) => (
+            <motion.div
+              key={photo.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.04 }}
+              className={`overflow-hidden rounded-2xl border bg-white shadow-sm ${
+                photo.visible === false ? 'border-charcoal/15 opacity-70' : 'border-beige'
+              }`}
+            >
+              <div className="relative aspect-[4/5] overflow-hidden bg-beige">
+                <img
+                  src={photo.imageUrl}
+                  alt={photo.caption}
+                  className="h-full w-full object-cover"
+                />
+                {photo.visible === false && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-charcoal/40">
+                    <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-charcoal">
+                      مخفية
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              <div className="p-4">
+                {editingId === photo.id ? (
+                  <div className="space-y-3">
+                    <input
+                      type="text"
+                      value={editCaption}
+                      onChange={(e) => setEditCaption(e.target.value)}
+                      className="w-full rounded-lg border border-beige bg-cream px-3 py-2 text-sm text-charcoal outline-none focus:border-gold"
+                      placeholder="النص المعروض مع الصورة"
+                    />
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => handleSaveCaption(photo.id)}
+                        disabled={savingId === photo.id}
+                        className="flex-1 rounded-lg bg-gold py-2 text-sm text-white disabled:opacity-50"
+                      >
+                        {savingId === photo.id ? 'جاري الحفظ...' : 'حفظ'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={cancelEdit}
+                        className="rounded-lg border border-beige px-4 py-2 text-sm text-charcoal hover:bg-beige"
+                      >
+                        إلغاء
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <h3 className="font-medium text-charcoal">{photo.caption}</h3>
+                    <p className="mt-1 text-xs text-charcoal/45">
+                      {formatDate(photo.createdAt)}
+                    </p>
+
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        onClick={() => startEdit(photo)}
+                        className="flex items-center justify-center gap-2 rounded-lg border border-beige px-3 py-2 text-sm text-charcoal transition-colors hover:bg-beige"
+                      >
+                        <FaEdit />
+                        تعديل
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleToggleVisibility(photo)}
+                        disabled={togglingId === photo.id}
+                        className={`flex flex-1 items-center justify-center gap-2 rounded-lg border px-3 py-2 text-sm transition-colors disabled:opacity-50 ${
+                          photo.visible === false
+                            ? 'border-green-200 text-green-600 hover:bg-green-50'
+                            : 'border-beige text-charcoal hover:bg-beige'
+                        }`}
+                      >
+                        {photo.visible === false ? <FaEye /> : <FaEyeSlash />}
+                        {photo.visible === false ? 'إظهار' : 'إخفاء'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(photo.id)}
+                        disabled={deletingId === photo.id}
+                        className="flex items-center justify-center gap-2 rounded-lg border border-red-200 px-3 py-2 text-sm text-red-500 transition-colors hover:bg-red-50 disabled:opacity-50"
+                      >
+                        <FaTrash />
+                        حذف
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
             </motion.div>
           ))}
         </div>
@@ -443,7 +760,7 @@ export default function Dashboard() {
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
           <div>
             <h1 className="font-display text-2xl text-charcoal">لوحة التحكم</h1>
-            <p className="text-sm text-charcoal/60">إدارة الدعوات والتهاني</p>
+            <p className="text-sm text-charcoal/60">إدارة الدعوات والتهاني والصور</p>
           </div>
           <div className="flex items-center gap-3">
             <button
@@ -467,23 +784,35 @@ export default function Dashboard() {
       </header>
 
       <main className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-        <div className="mb-8 flex gap-2 rounded-2xl border border-beige bg-white p-2 shadow-sm">
+        <div className="mb-8 flex flex-wrap gap-2 rounded-2xl border border-beige bg-white p-2 shadow-sm">
           <button
             type="button"
             onClick={() => setActiveTab('invites')}
-            className={`flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
+            className={`flex flex-1 min-w-[120px] items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
               activeTab === 'invites'
                 ? 'bg-gold text-white'
                 : 'text-charcoal hover:bg-beige'
             }`}
           >
             <FaEnvelope />
-            الدعوات المخصصة
+            الدعوات
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('photos')}
+            className={`flex flex-1 min-w-[120px] items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
+              activeTab === 'photos'
+                ? 'bg-gold text-white'
+                : 'text-charcoal hover:bg-beige'
+            }`}
+          >
+            <FaCamera />
+            صور العريس
           </button>
           <button
             type="button"
             onClick={() => setActiveTab('wishes')}
-            className={`flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
+            className={`flex flex-1 min-w-[120px] items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
               activeTab === 'wishes'
                 ? 'bg-gold text-white'
                 : 'text-charcoal hover:bg-beige'
@@ -494,11 +823,9 @@ export default function Dashboard() {
           </button>
         </div>
 
-        {activeTab === 'invites' ? (
-          <InvitesPanel key={`invites-${refreshKey}`} />
-        ) : (
-          <WishesPanel key={`wishes-${refreshKey}`} />
-        )}
+        {activeTab === 'invites' && <InvitesPanel key={`invites-${refreshKey}`} />}
+        {activeTab === 'photos' && <GuestPhotosPanel key={`photos-${refreshKey}`} />}
+        {activeTab === 'wishes' && <WishesPanel key={`wishes-${refreshKey}`} />}
       </main>
     </div>
   );

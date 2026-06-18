@@ -7,6 +7,7 @@ import {
   orderBy,
   query,
   serverTimestamp,
+  updateDoc,
 } from 'firebase/firestore';
 import { db } from '../firebase/firebaseConfig';
 
@@ -35,4 +36,18 @@ export async function fetchWishes() {
 
 export async function deleteWish(wishId) {
   await deleteDoc(doc(db, WISHES_COLLECTION, wishId));
+}
+
+export async function updateWish(wishId, { name, message }) {
+  const trimmedName = name.trim();
+  const trimmedMessage = message.trim();
+
+  if (!trimmedName) throw new Error('الاسم مطلوب');
+  if (!trimmedMessage) throw new Error('رسالة التهنئة مطلوبة');
+
+  await updateDoc(doc(db, WISHES_COLLECTION, wishId), {
+    name: trimmedName,
+    message: trimmedMessage,
+    updatedAt: serverTimestamp(),
+  });
 }
